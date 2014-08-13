@@ -59,5 +59,31 @@ Class User extends CI_Model {
                         return FALSE;
                 }
         }
+
+        function count_admins() {
+                $this->db->select('id');
+                $this->db->from('users');
+                $this->db->where('role', 0);
+
+                $query = $this->db->get();
+
+                return $query->num_rows();
+        }
+
+        function save_existing_user($userId, $username, $password, $role) {
+                $data['username'] = $username;
+                $data['role'] = $role;
+
+                $password = trim($password);
+                if (!empty($password)) {
+                        $data['password'] = md5($password);
+                }
+
+                $this->db->where('id', $userId);
+                if ($this->db->update('users', $data)) {
+                        return TRUE;
+                }
+                return FALSE;
+        }
 }
 

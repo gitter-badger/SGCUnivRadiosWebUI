@@ -11,7 +11,7 @@ class Admin extends CI_Controller {
                 parent::__construct();
             
                 $this->load->model('user');
-                if ($this->user->get_user_role($this->session->userdata('logged_in')['username'])[0]->role != 0) {
+                if ($this->user->get_user_role($this->session->userdata('logged_in')['username'])[0]->role > 1) {
                         header('location: '.base_url());
                 }
         }
@@ -20,7 +20,7 @@ class Admin extends CI_Controller {
                 $sessData = $this->session->userdata('logged_in');
                 $data['username'] = $sessData['username'];
 
-                $this->load->helper(Array('form'));
+                $this->load->helper(array('form'));
 
                 // General tab
                 // Users tab

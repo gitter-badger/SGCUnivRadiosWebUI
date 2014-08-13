@@ -32,7 +32,7 @@
                                                         <td><?php print($user->id); ?></td>
                                                         <td><?php print($user->username); ?></td>
                                                         <td><?php print(gmdate("Y/m/d H:i:s", $user->creation_ts)) ?></td>
-                                                        <td><?php print($user->role == 0 ? 'Root':($user->role == 1 ? 'Admin':'User')); ?></td>
+                                                        <td><?php print($user->role == 0 ? 'Admin':'User'); ?></td>
                                                         <td><button class="btn btn-success btn-sm btn-edit-user" data-id="<?php print($user->id); ?>"><span class="glyphicon glyphicon-pencil"></span></button></td>
                                                 </tr>
                                                 <?php endforeach; ?>
@@ -54,19 +54,21 @@
                                 <h4 class="modal-title" id="user_actionLabel">Edit user</h4>
                         </div>
                         <div class="modal-body">
-                                <?php print(form_open(base_url('verifylogin'), array('class' => 'form-signin'))); ?>
-                                        <?php print(validation_errors()); ?>
+                                <?php print(form_open('#', array('class' => 'form-signin'))); ?>
+                                        <div class="alert alert-danger alert-dismissible" role="alert" style="display:none;"></div>
+                                        <label for="username">Username <span class="label label-default">required</span> :</label>
                                         <input type="text" class="form-control" id="username" name="username" placeholder="Username" />
                                         <br/>
+                                        <label for="username">Change password <span class="label label-default">optional</span> :</label>
                                         <input type="password" class="form-control" id="password" name="password" placeholder="Password" />
                                         <br/>
+                                        <label for="username">Confirm password <span class="label label-default">optional</span> :</label>
                                         <input type="password" class="form-control" id="passwordconf" name="passwordconf" placeholder="Confirm password" />
                                         <br/>
-                                        <label for="rolecb">Select a role :</label>
+                                        <label for="rolecb">Select a role <span class="label label-default">required</span> :</label>
                                         <select class="form-control" id="rolecb" name="rolecb" placeholder="Role">
-                                                <option value="2">User</option>
-                                                <option value="1">Admin</option>
-                                                <option value="0">Root</option>
+                                                <option value="1">User</option>
+                                                <option value="0">Admin</option>
                                         </select>
                                 </form>
                         </div>
@@ -102,12 +104,18 @@
                         dataType: 'json'
                 })
                 .done(function(data) {
-                        $('#username').val(data.username);
-                        $('#rolecb option[value="'+data.role+'"]').attr('selected', 'selected');
-                        if (data.role == 0) {
-                                $('.btn-danger').hide();
+                        if (data.rc == 0) {
+                                $('#username').val(data.username);
+                                $('#rolecb option[value="'+data.role+'"]').attr('selected', 'selected');
+                                $('#password, #passwordconf').val('');
+                                if (data.role == 0 && data.nbAdmins >= 1) {
+                                        $('.btn-danger').hide();
+                                        $('#rolecb').attr('disabled', 'disabled');
+                                }
+                                $('#status_div').empty();
+                        } else {
+                                
                         }
-                        $('#status_div').empty();
                 });
         });
         var changes = 0;
@@ -121,9 +129,13 @@
                         $.ajax({
                                 type: 'POST',
                                 url: '<?php print(base_url('ajax/admin/user/save')); ?>',
-                                data: {'username':$('#username').val(),'password':$('#password').val(),'passwordconf':$('#passwordconf').val(),'role':$('#rolecb').val()},
+                                data: {'ID':userId,'username':$('#username').val(),'password':$('#password').val(),'passwordconf':$('#passwordconf').val(),'role':$('#rolecb').val()},
                                 success: function(data) {
-                                        $('#user_action').modal('hide');
+                                        if (data.rc == 0) {
+                                                location.reload();
+                                        } else {
+                                                $('.alert-danger').text(data.rcMsg);
+                                        }
                                 },
                                 dataType: 'json'
                         });
