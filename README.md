@@ -5,7 +5,7 @@ Just a web UI to manage and listen audio streams from icecast
 
 The WebUI is not currently fully functionnal, but it will soon !
 
-Install :
+<h3>Install :</h3>
 1. Copy all the files into the document root of your virtual host
 2. Create a database with mysql and a specific mysql user
 3. Create a user in the users table (the password should ciphered with the MD5 MySQL function)
