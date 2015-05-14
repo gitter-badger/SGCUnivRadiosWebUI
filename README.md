@@ -1,6 +1,8 @@
 SGCUnivRadiosWebUI
 ==================
 
+[![Join the chat at https://gitter.im/DjazzLab/SGCUnivRadiosWebUI](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/DjazzLab/SGCUnivRadiosWebUI?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Just a web UI to manage and listen audio streams from icecast
 
 The WebUI is not currently fully functionnal, but it will soon !
